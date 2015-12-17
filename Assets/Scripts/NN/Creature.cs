@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -45,7 +44,6 @@ namespace Assets.Scripts.NN {
 			Body.transform.parent = parent;
 
 			Brain = new NeuralNetwork(8, 6, 4);
-
 			Life = 100;
 
 			_sensorL = Body.transform.GetChild(5).transform.position;
@@ -65,6 +63,7 @@ namespace Assets.Scripts.NN {
 
 		public void Reset () {
 			Body.SetActive(true);
+			Brain = new NeuralNetwork(8, 6, 4);
 			Dead = false;
 			Fitness = 0;
 			Life = 100;

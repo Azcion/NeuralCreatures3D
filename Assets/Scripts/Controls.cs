@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Controls : MonoBehaviour {
 
 	void Update () {
-		if (Input.GetKey("escape")) {
+		if (Input.GetKeyUp("escape")) {
 			Application.Quit();
 		}
 	}

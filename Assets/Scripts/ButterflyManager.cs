@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using Assets.Scripts.NN;
 
 public class ButterflyManager : MonoBehaviour {
