@@ -11,4 +11,12 @@ public class Container {
 
 	public static List<Creature> CreatureList = new List<Creature>();
 
+	public static void ResetAllDead () {
+		foreach (Creature creature in CreatureList) {
+			if (creature.Dead) {
+				creature.Reset();
+			}
+		}
+	}
+
 }

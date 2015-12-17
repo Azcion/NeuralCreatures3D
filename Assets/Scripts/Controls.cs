@@ -6,6 +6,9 @@ public class Controls : MonoBehaviour {
 		if (Input.GetKeyUp("escape")) {
 			Application.Quit();
 		}
+		if (Input.GetKeyUp("r")) {
+			Container.ResetAllDead();
+		}
 	}
 
 }
