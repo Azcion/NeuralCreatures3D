@@ -29,6 +29,7 @@ public class ButterflyAnimator : MonoBehaviour {
 		Butterfly.transform.Translate(0, 0, -.01f);
 
 		float angle = 425 * Time.deltaTime * _dir;
+
 		RT.transform.RotateAround(Body.transform.position, Butterfly.transform.forward, angle);
 		RB.transform.RotateAround(Body.transform.position, Butterfly.transform.forward, angle);
 		LT.transform.RotateAround(Body.transform.position, Butterfly.transform.forward, -angle);

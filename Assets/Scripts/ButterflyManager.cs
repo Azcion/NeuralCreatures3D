@@ -21,8 +21,17 @@ public class ButterflyManager : MonoBehaviour {
 	}
 
 	void Update () {
+		int deadCount = 0;
+
 		foreach (Creature butterfly in Container.CreatureList) {
 			butterfly.Update(Container.FoodList, Container.ObstList);
+			if (butterfly.Dead) {
+				++deadCount;
+			}
+		}
+
+		if (deadCount == Container.CreatureList.Count) {
+			Container.ResetAllDead();
 		}
 	}
 
