@@ -20,20 +20,20 @@ namespace Assets.Scripts.NN {
 
 		public GameObject Body;
 
-		private readonly Vector3 _sensorL;
-		private readonly Vector3 _sensorR;
-		private readonly Vector3 _sensorU;
-		private readonly Vector3 _sensorD;
+		public GameObject SensorL;
+		public GameObject SensorR;
+		public GameObject SensorU;
+		public GameObject SensorD;
 
 		public NeuralNetwork Brain;
 
 		public int Age;
 		public bool Dead;
 		public double Life;
-		public double Fitness;
+		public int Fitness;
 		public double ParentChance;
 
-		private double _itemProx = .5;
+		private const double ItemProx = .5;
 
 		public Creature (GameObject body, Vector3 rotation, Transform parent) {
 			Body = body;
@@ -46,10 +46,10 @@ namespace Assets.Scripts.NN {
 			Brain = new NeuralNetwork(8, 6, 4);
 			Life = 100;
 
-			_sensorL = Body.transform.GetChild(5).transform.position;
-			_sensorR = Body.transform.GetChild(6).transform.position;
-			_sensorU = Body.transform.GetChild(7).transform.position;
-			_sensorD = Body.transform.GetChild(8).transform.position;
+			SensorL = Body.transform.GetChild(5).gameObject;
+			SensorR = Body.transform.GetChild(6).gameObject;
+			SensorU = Body.transform.GetChild(7).gameObject;
+			SensorD = Body.transform.GetChild(8).gameObject;
 		}
 
 		public static void SetDimensions (float[] dimensions) {
@@ -74,7 +74,6 @@ namespace Assets.Scripts.NN {
 			Dead = true;
 			Fitness = 0;
 			Life = 0;
-			ParentChance = 0;
 			Age = 0;
 		}
 
@@ -91,20 +90,20 @@ namespace Assets.Scripts.NN {
 			Vector3 closestFood = closestFoodItem.transform.position;
 			Vector3 closestObst = GetClosestObst(obstList).transform.position;
 
-			double closestFoodL = Vector3.Distance(closestFood, _sensorL);
-			double closestFoodR = Vector3.Distance(closestFood, _sensorR);
-			double closestFoodU = Vector3.Distance(closestFood, _sensorU);
-			double closestFoodD = Vector3.Distance(closestFood, _sensorD);
+			double closestFoodL = Vector3.Distance(closestFood, SensorL.transform.position);
+			double closestFoodR = Vector3.Distance(closestFood, SensorR.transform.position);
+			double closestFoodU = Vector3.Distance(closestFood, SensorU.transform.position);
+			double closestFoodD = Vector3.Distance(closestFood, SensorD.transform.position);
 
-			double closestObstL = Vector3.Distance(closestObst, _sensorL);
-			double closestObstR = Vector3.Distance(closestObst, _sensorR);
-			double closestObstU = Vector3.Distance(closestObst, _sensorU);
-			double closestObstD = Vector3.Distance(closestObst, _sensorD);
+			double closestObstL = Vector3.Distance(closestObst, SensorL.transform.position);
+			double closestObstR = Vector3.Distance(closestObst, SensorR.transform.position);
+			double closestObstU = Vector3.Distance(closestObst, SensorU.transform.position);
+			double closestObstD = Vector3.Distance(closestObst, SensorD.transform.position);
 
 			double centerDistFood = Vector3.Distance(closestFood, Body.transform.position);
 			double centerDistObst = Vector3.Distance(closestObst, Body.transform.position);
 
-			if (centerDistFood < _itemProx) {
+			if (centerDistFood < ItemProx) {
 				Life += 30;
 				Fitness += 10;
 				closestFoodItem.transform.position = new Vector3(Random.Range(Dimensions.xA, Dimensions.xB),
@@ -208,7 +207,7 @@ namespace Assets.Scripts.NN {
 					break;
 			}
 
-			if (centerObstDist < _itemProx) {
+			if (centerObstDist < ItemProx) {
 				--Life;
 				Fitness -= 10;
 				if (Fitness < 0) {
