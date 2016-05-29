@@ -177,7 +177,7 @@ namespace Assets.Scripts.NN {
 			return dendriteCount;
 		}
 
-		public double[] GetBias () {
+		public double[] GetBiases () {
 			int biasCount = 0;
 			double[] bias = new double[GetBiasCount()];
 

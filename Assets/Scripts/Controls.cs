@@ -9,7 +9,10 @@ public class Controls : MonoBehaviour {
 			Application.Quit();
 		}
 		if (Input.GetKeyUp("r")) {
-			Container.ResetAllDead();
+			Container.ResetAll();
+		}
+		if (Input.GetKeyUp("g")) {
+			Container.GeneticAlgorithm.Evolve(Container.CreatureList);
 		}
 		if (Input.GetKey("left")) {
 			Camera.transform.RotateAround(new Vector3(0, 5, 0), Vector3.up, 1);

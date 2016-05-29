@@ -7,7 +7,7 @@ public class ButterflyManager : MonoBehaviour {
 	public GameObject Butterfly;
 
 	void Start () {
-		Creature.SetDimensions(Container.Dimensions);
+		Creature.SetDimensions(Container.DIMENSIONS);
 
 		for (int i = 0; i < 10; ++i) {
 			Vector3 rot = new Vector3(Random.Range(0, 360),

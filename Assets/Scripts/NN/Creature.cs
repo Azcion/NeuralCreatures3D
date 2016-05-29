@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,9 +9,9 @@ namespace Assets.Scripts.NN {
 
 		private struct Dimensions {
 
-			public static float xA = 0;
-			public static float yA = 0;
-			public static float zA = 0;
+			public static float xA;
+			public static float yA;
+			public static float zA;
 
 			public static float xB = 1;
 			public static float yB = 1;
@@ -19,6 +20,8 @@ namespace Assets.Scripts.NN {
 		}
 
 		public GameObject Body;
+		public Vector3 Rotation;
+		public Transform Parent;
 
 		public GameObject SensorL;
 		public GameObject SensorR;
@@ -43,7 +46,10 @@ namespace Assets.Scripts.NN {
 			Body.transform.Rotate(rotation);
 			Body.transform.parent = parent;
 
-			Brain = new NeuralNetwork(8, 6, 4);
+			Rotation = rotation;
+			Parent = parent;
+
+			Brain = new NeuralNetwork(8, 15, 4);
 			Life = 100;
 
 			SensorL = Body.transform.GetChild(5).gameObject;
@@ -63,7 +69,10 @@ namespace Assets.Scripts.NN {
 
 		public void Reset () {
 			Body.SetActive(true);
-			Brain = new NeuralNetwork(8, 6, 4);
+			Body.transform.position = new Vector3(Random.Range(Dimensions.xA, Dimensions.xB),
+												  Random.Range(Dimensions.yA, Dimensions.yB),
+												  Random.Range(Dimensions.zA, Dimensions.zB));
+			Brain = new NeuralNetwork(8, 15, 4);
 			Dead = false;
 			Fitness = 0;
 			Life = 100;
@@ -132,21 +141,14 @@ namespace Assets.Scripts.NN {
 			}
 
 			// {foodL, foodR, foodU, foodD, obstL, obstR, obstU, obstD}
-			double[] input = new double[8];
 
-			if (centerDistFood < centerDistObst) {
-				for (int i = 0; i < 4; ++i) {
-					input[i] = -1;
-				}
-				input[indexMinFoodDist] = 1;
-			} else {
-				for (int i = 4; i < 8; ++i) {
-					input[i] = -1;
-				}
-				input[indexMinObstDist] = 1;
-			}
+			double[] input = {-1, -1, -1, -1, -1, -1, -1, -1};
+			input[indexMinFoodDist] = 1;
+			input[indexMinObstDist + 4] = 1;
 
-			double[] output = Brain.Run(input);
+			// todo lol
+			double[] output = SmartBrain(input);
+			//double[] output = Brain.Run(input);
 
 			ProcessOutput(output, centerDistObst);
 		}
@@ -181,6 +183,16 @@ namespace Assets.Scripts.NN {
 			return closestObst;
 		}
 
+		private double[] SmartBrain (double[] inputs) {
+			double[] outputs = {1, 1, 1, 1};
+
+			for (int i = 0; i < 4; ++i) {
+				outputs[i] += inputs[i] - inputs[i + 4];
+			}
+
+			return outputs;
+		}
+
 		private void ProcessOutput (IList<double> output, double centerObstDist) {
 			int indexMaxOutput = 0;
 			double maxOutput = output[0];
@@ -192,18 +204,20 @@ namespace Assets.Scripts.NN {
 				}
 			}
 
+			const float angle = 2f;
+
 			switch (indexMaxOutput) {
-				case 0:
-					Body.transform.Rotate(Vector3.left, 1);
-					break;
-				case 1:
-					Body.transform.Rotate(Vector3.right, 1);
+				case 3:
+					Body.transform.Rotate(Vector3.left, angle);  // down
 					break;
 				case 2:
-					Body.transform.Rotate(Vector3.up, 1);
+					Body.transform.Rotate(Vector3.right, angle);  // up
 					break;
-				case 3:
-					Body.transform.Rotate(Vector3.down, 1);
+				case 1:
+					Body.transform.Rotate(Vector3.up, angle);  // right
+					break;
+				case 0:
+					Body.transform.Rotate(Vector3.down, angle);  // left
 					break;
 			}
 
